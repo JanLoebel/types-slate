@@ -21,7 +21,7 @@
     "type": "git",
     "url": "https://www.github.com/DefinitelyTyped/DefinitelyTyped.git"
   },
-  "dependencies": {
+  "devDependencies": {
     "@types/immutable": "^3.8.7"
   },
   "typeScriptVersion": "2.3",
