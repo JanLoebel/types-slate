@@ -376,8 +376,8 @@ declare module 'slate' {
       insertInline(inline: Inline | InlineProperties): Change;
       insertText(text: string): Change;
       addMark(mark: Mark | MarkProperties | string): Change;
-      setBlock(properties: BlockProperties | string): Change;
-      setInline(properties: InlineProperties | string): Change;
+      setBlocks(properties: BlockProperties | string): Change;
+      setInlines(properties: InlineProperties | string): Change;
       splitBlock(depth: number): Change;
       splitInline(depth: number): Change;
       removeMark(mark: Mark | MarkProperties | string): Change;
@@ -433,8 +433,8 @@ declare module 'slate' {
       ): Change;
       insertTextAtRange(range: Range, text: string): Change;
       addMarkAtRange(range: Range, mark: Mark | MarkProperties | string): Change;
-      setBlockAtRange(range: Range, properties: BlockProperties | string): Change;
-      setInlineAtRange(
+      setBlocksAtRange(range: Range, properties: BlockProperties | string): Change;
+      setInlinesAtRange(
         range: Range,
         properties: InlineProperties | string
       ): Change;
