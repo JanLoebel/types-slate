@@ -186,7 +186,7 @@ declare module 'slate' {
     interface BlockJSON {
       type: string;
       key?: string;
-      nodes?: Node[];
+      nodes?: NodeJSON[];
       isVoid?: boolean;
       data?: { [key: string]: any };
       object: 'block';
@@ -217,7 +217,7 @@ declare module 'slate' {
     interface InlineJSON {
       type: string;
       key?: string;
-      nodes?: Node[];
+      nodes?: NodeJSON[];
       isVoid?: boolean;
       data?: { [key: string]: any };
       object: 'inline';
@@ -249,7 +249,7 @@ declare module 'slate' {
   
     interface TextJSON {
       key?: string;
-      characters: Character[];
+      characters?: Character[];
       leaves: Leaf[];
       object: 'text';
     }
