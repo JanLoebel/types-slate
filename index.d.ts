@@ -249,7 +249,7 @@ declare module 'slate' {
   
     interface TextJSON {
       key?: string;
-      characters: Character[];
+      characters?: Character[];
       leaves: Leaf[];
       object: 'text';
     }
