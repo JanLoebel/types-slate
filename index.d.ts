@@ -342,6 +342,11 @@ declare module 'slate' {
       type: string;
       data?: Immutable.Map<string, any> | { [key: string]: any };
     }
+
+    interface MarkJSON {
+      type: string;
+      data?: { [key: string]: any };
+    }
   
     export class Mark extends Immutable.Record({}) {
       object: 'mark';
@@ -352,7 +357,7 @@ declare module 'slate' {
       static createSet(
         array: (MarkProperties | Mark | string)[]
       ): Immutable.Set<Mark>;
-      static fromJSON(properties: MarkProperties | Mark): Mark;
+      static fromJSON(properties: MarkJSON | Mark): Mark;
       static isMark(maybeMark: any): maybeMark is Mark;
   
       toJSON(): MarkProperties;
@@ -527,6 +532,16 @@ declare module 'slate' {
       isBackward?: boolean | null;
       marks?: Immutable.Set<Mark> | null;
     }
+
+    interface RangeJSON {
+      anchorKey?: string | null;
+      anchorOffset?: number;
+      focusKey?: string | null;
+      focusOffset?: number;
+      isFocused?: boolean;
+      isBackward?: boolean | null;
+      marks?: MarkJSON[] | null;
+    }
   
     export class Range extends Immutable.Record({}) {
       object: 'range';
@@ -548,7 +563,7 @@ declare module 'slate' {
       readonly endOffset: number;
   
       static create(properties: RangeProperties | Range): Range;
-      static fromJSON(properties: RangeProperties): Range;
+      static fromJSON(properties: RangeJSON): Range;
       static isRange(maybeRange: any): maybeRange is Range;
   
       toJSON(): RangeProperties;
