@@ -258,6 +258,7 @@ declare module 'slate' {
       object: 'text';
       characters: Immutable.List<Character>;
       key: string;
+      text: string;
   
       static create(properties: TextProperties | Text | string): Text;
       static fromJSON(properties: TextProperties | Text): Text;
