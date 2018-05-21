@@ -709,6 +709,7 @@ declare module 'slate' {
       plugins: any[];
     }
 
+    export function setKeyGenerator(func: () => string): void;
     export function resetKeyGenerator(): void;
   }
 
