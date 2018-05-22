@@ -7,20 +7,20 @@
 // TypeScript Version: 2.3
 declare module 'slate' {
     import * as Immutable from 'immutable';
-  
+
     export interface Data {
       [key: string]: any;
     }
-  
-    interface Rules {
-      [key: string]: Rule;
+
+    interface RulesByNodeType {
+      [key: string]: Rules;
     }
-  
+
     interface KindsAndTypes {
       kinds?: string[];
       types?: string[];
     }
-  
+
     type InvalidReason =
       | 'child_kind_invalid'
       | 'child_required'
@@ -36,8 +36,8 @@ declare module 'slate' {
       | 'node_text_invalid'
       | 'parent_kind_invalid'
       | 'parent_type_invalid';
-  
-    interface Rule {
+
+    interface Rules {
       data?: {
         [key: string]: (v: any) => boolean;
       };
@@ -58,25 +58,25 @@ declare module 'slate' {
       parent?: KindsAndTypes;
       text?: RegExp;
     }
-  
+
     interface SchemaProperties {
       document?: Rules;
-      blocks?: Rules;
-      inlines?: Rules;
+      blocks?: RulesByNodeType;
+      inlines?: RulesByNodeType;
     }
-  
+
     export class Schema extends Immutable.Record({}) {
       document: Rules;
-      blocks: Rules;
-      inlines: Rules;
-  
+      blocks: RulesByNodeType;
+      inlines: RulesByNodeType;
+
       static create(properties: SchemaProperties | Schema): Schema;
       static fromJSON(object: SchemaProperties): Schema;
       static isSchema(maybeSchema: any): maybeSchema is Schema;
-  
+
       toJSON(): SchemaProperties;
     }
-  
+
     interface ValueProperties {
       document?: Document;
       selection?: Range;
@@ -85,7 +85,7 @@ declare module 'slate' {
       data?: Data;
       decorations?: Immutable.List<Range> | null;
     }
-  
+
     interface ValueJSON {
       document?: DocumentJSON;
       selection?: Range;
@@ -95,7 +95,7 @@ declare module 'slate' {
       decorations?: Immutable.List<Range> | null;
       object?: 'value';
     }
-  
+
     export class Value extends Immutable.Record({}) {
       document: Document;
       selection: Range;
@@ -104,17 +104,17 @@ declare module 'slate' {
       data: Data;
       object: 'value';
       decorations: Immutable.List<Range> | null;
-  
+
       readonly anchorText: Text;
       readonly focusText: Text;
       readonly startText: Text;
       readonly endText: Text;
-  
+
       readonly anchorBlock: Block;
       readonly focusBlock: Block;
       readonly startBlock: Block;
       readonly endBlock: Block;
-  
+
       readonly marks: Immutable.Set<Mark>;
       readonly activeMarks: Immutable.Set<Mark>;
       readonly blocks: Immutable.List<Block>;
@@ -124,7 +124,7 @@ declare module 'slate' {
       readonly characters: Immutable.List<Character>;
       readonly hasUndos: boolean;
       readonly hasRedos: boolean;
-  
+
       readonly anchorKey: string;
       readonly focusKey: string;
       readonly startKey: string;
@@ -139,42 +139,42 @@ declare module 'slate' {
       readonly isExpanded: boolean;
       readonly isFocused: boolean;
       readonly isForward: boolean;
-  
+
       static create(properties?: ValueProperties | Value): Value;
       static fromJSON(properties: ValueJSON): Value;
       static isValue(maybeValue: any): maybeValue is Value;
-  
+
       change(): Change;
       toJSON(): ValueJSON;
     }
-  
+
     interface DocumentProperties {
       nodes?: Immutable.List<Node> | Node[];
       key?: string;
       data?: Immutable.Map<string, any> | { [key: string]: any };
     }
-  
+
     interface DocumentJSON {
       nodes?: NodeJSON[];
       key?: string;
       data?: { [key: string]: any };
       object?: 'document';
     }
-  
+
     export class Document<DataMap = { [key: string]: any }> extends BaseNode<
       DataMap
     > {
       object: 'document';
-  
+
       static create(
         properties: DocumentProperties | Document | Immutable.List<Node> | Node[]
       ): Document;
       static fromJSON(properties: DocumentProperties | Document): Document;
       static isDocument(maybeDocument: any): maybeDocument is Document;
-  
+
       toJSON(): DocumentJSON;
     }
-  
+
     interface BlockProperties {
       type: string;
       key?: string;
@@ -182,7 +182,7 @@ declare module 'slate' {
       isVoid?: boolean;
       data?: Immutable.Map<string, any> | { [key: string]: any };
     }
-  
+
     interface BlockJSON {
       type: string;
       key?: string;
@@ -191,21 +191,21 @@ declare module 'slate' {
       data?: { [key: string]: any };
       object: 'block';
     }
-  
+
     export class Block extends BaseNode {
       isVoid: boolean;
       object: 'block';
-  
+
       static create(properties: BlockProperties | Block | string): Block;
       static createList(
         array: (BlockProperties | Block | string)[]
       ): Immutable.List<Block>;
       static fromJSON(properties: BlockProperties | Block): Block;
       static isBlock(maybeBlock: any): maybeBlock is Block;
-  
+
       toJSON(): BlockJSON;
     }
-  
+
     interface InlineProperties {
       type: string;
       key?: string;
@@ -213,7 +213,7 @@ declare module 'slate' {
       isVoid?: boolean;
       data?: Immutable.Map<string, any> | { [key: string]: any };
     }
-  
+
     interface InlineJSON {
       type: string;
       key?: string;
@@ -222,53 +222,54 @@ declare module 'slate' {
       data?: { [key: string]: any };
       object: 'inline';
     }
-  
+
     export class Inline extends BaseNode {
       isVoid: boolean;
       object: 'inline';
-  
+
       static create(properties: InlineProperties | Inline | string): Inline;
       static createList(
         array: (InlineProperties | Inline | string)[]
       ): Immutable.List<Inline>;
       static fromJSON(properties: InlineProperties | Inline): Inline;
       static isInline(maybeInline: any): maybeInline is Inline;
-  
+
       toJSON(): InlineJSON;
     }
-  
+
     interface Leaf {
       marks?: Mark[];
       text: string;
     }
-  
+
     interface TextProperties {
       key?: string;
       characters: Immutable.List<Character>;
     }
-  
+
     interface TextJSON {
       key?: string;
       characters?: Character[];
       leaves: Leaf[];
       object: 'text';
     }
-  
+
     export class Text extends Immutable.Record({}) {
       object: 'text';
       characters: Immutable.List<Character>;
       key: string;
-  
+      text: string;
+
       static create(properties: TextProperties | Text | string): Text;
       static fromJSON(properties: TextProperties | Text): Text;
       static isText(maybeText: any): maybeText is Text;
-  
+
       toJSON(): TextJSON;
     }
-  
+
     type Node = Document | Block | Inline | Text;
     type NodeJSON = DocumentJSON | BlockJSON | InlineJSON | TextJSON;
-  
+
     class BaseNode<DataMap = { [key: string]: any }> extends Immutable.Record(
       {}
     ) {
@@ -278,7 +279,7 @@ declare module 'slate' {
       object: 'document' | 'block' | 'inline' | 'text';
       nodes: Immutable.List<Node>;
       readonly text: string;
-  
+
       filterDescendants(iterator: (node: Node) => boolean): Immutable.List<Node>;
       findDescendants(iterator: (node: Node) => boolean): Node | null;
       getBlocksAtRange(range: Range): Immutable.List<Block>;
@@ -314,17 +315,17 @@ declare module 'slate' {
       getTextsAtRangeAsArray(range: Range): Text[];
       hasChild(key: string | Node): boolean;
     }
-  
+
     interface CharacterProperties {
       marks?: Immutable.Set<Mark> | Mark[];
       text: string;
     }
-  
+
     export class Character extends Immutable.Record({}) {
       object: 'character';
       marks: Immutable.Set<Mark>;
       text: string;
-  
+
       static create(
         properties: CharacterProperties | Character | string
       ): Character;
@@ -333,40 +334,45 @@ declare module 'slate' {
       ): Immutable.List<Character>;
       static fromJSON(properties: CharacterProperties | Character): Character;
       static isCharacter(maybeCharacter: any): maybeCharacter is Character;
-  
+
       toJSON(): CharacterProperties;
     }
-  
+
     interface MarkProperties {
       type: string;
       data?: Immutable.Map<string, any> | { [key: string]: any };
     }
-  
+
+    interface MarkJSON {
+      type: string;
+      data?: { [key: string]: any };
+    }
+
     export class Mark extends Immutable.Record({}) {
       object: 'mark';
       type: string;
       data: Immutable.Map<string, any>;
-  
+
       static create(properties: MarkProperties | Mark | string): Mark;
       static createSet(
         array: (MarkProperties | Mark | string)[]
       ): Immutable.Set<Mark>;
-      static fromJSON(properties: MarkProperties | Mark): Mark;
+      static fromJSON(properties: MarkJSON | Mark): Mark;
       static isMark(maybeMark: any): maybeMark is Mark;
-  
+
       toJSON(): MarkProperties;
     }
-  
+
     export class Change extends Immutable.Record({}) {
       object: 'change';
       value: Value;
       operations: Immutable.List<Operation>;
-  
+
       call(customChange: (change: Change, ...args: any[]) => Change): Change;
-  
+
       applyOperations(operations: Operation[]): Change;
       applyOperation(operation: Operation): Change;
-  
+
       // Current Value Changes
       deleteBackward(n: number): Change;
       deleteForward(n: number): Change;
@@ -387,7 +393,7 @@ declare module 'slate' {
       wrapBlock(properties: BlockProperties | string): Change;
       wrapInline(properties: InlineProperties | string): Change;
       wrapText(prefix: string, suffix?: string): Change;
-  
+
       // Selection Changes
       blur(): Change;
       collapseToAnchor(): Change;
@@ -417,7 +423,7 @@ declare module 'slate' {
       select(properties: Range | RangeProperties): Change;
       selectAll(): Change;
       deselect(): Change;
-  
+
       // Document Changes
       deleteBackwardAtRange(range: Range, n: number): Change;
       deleteForwardAtRange(range: Range, n: number): Change;
@@ -465,7 +471,7 @@ declare module 'slate' {
         properties: InlineProperties | string
       ): Change;
       wrapTextAtRange(range: Range, prefix: string, suffix?: string): Change;
-  
+
       // Node Changes
       addMarkByKey(
         key: string,
@@ -511,12 +517,12 @@ declare module 'slate' {
       unwrapNodeByKey(key: string): Change;
       wrapInlineByKey(key: string, properties: InlineProperties | string): Change;
       wrapBlockByKey(key: string, properties: BlockProperties | string): Change;
-  
+
       // History Changes
       redo(): Change;
       undo(): Change;
     }
-  
+
     interface RangeProperties {
       anchorKey?: string | null;
       anchorOffset?: number;
@@ -526,7 +532,17 @@ declare module 'slate' {
       isBackward?: boolean | null;
       marks?: Immutable.Set<Mark> | null;
     }
-  
+
+    interface RangeJSON {
+      anchorKey?: string | null;
+      anchorOffset?: number;
+      focusKey?: string | null;
+      focusOffset?: number;
+      isFocused?: boolean;
+      isBackward?: boolean | null;
+      marks?: MarkJSON[] | null;
+    }
+
     export class Range extends Immutable.Record({}) {
       object: 'range';
       anchorKey: string | null;
@@ -536,7 +552,7 @@ declare module 'slate' {
       isFocused: boolean;
       isBackward: boolean | null;
       marks: Immutable.Set<Mark> | null;
-  
+
       readonly isBlurred: boolean;
       readonly isCollapsed: boolean;
       readonly isExpanded: boolean;
@@ -545,41 +561,41 @@ declare module 'slate' {
       readonly startOffset: number;
       readonly endKey: string;
       readonly endOffset: number;
-  
+
       static create(properties: RangeProperties | Range): Range;
-      static fromJSON(properties: RangeProperties): Range;
+      static fromJSON(properties: RangeJSON): Range;
       static isRange(maybeRange: any): maybeRange is Range;
-  
+
       toJSON(): RangeProperties;
-  
+
       hasAnchorAtStartOf(node: Node): boolean;
       hasFocusAtStartOf(node: Node): boolean;
       hasStartAtStartOf(node: Node): boolean;
       hasEndAtStartOf(node: Node): boolean;
       hasEdgeAtStartOf(node: Node): boolean;
-  
+
       hasAnchorAtEndOf(node: Node): boolean;
       hasFocusAtEndOf(node: Node): boolean;
       hasStartAtEndOf(node: Node): boolean;
       hasEndAtEndOf(node: Node): boolean;
       hasEdgeAtEndOf(node: Node): boolean;
-  
+
       hasAnchorBetween(node: Node, start: number, end: number): boolean;
       hasFocusBetween(node: Node, start: number, end: number): boolean;
       hasStartBetween(node: Node, start: number, end: number): boolean;
       hasEndBetween(node: Node, start: number, end: number): boolean;
       hasEdgeBetween(node: Node, start: number, end: number): boolean;
-  
+
       hasAnchorAtIn(node: Node): boolean;
       hasFocusIn(node: Node): boolean;
       hasStartIn(node: Node): boolean;
       hasEndIn(node: Node): boolean;
       hasEdgeIn(node: Node): boolean;
-  
+
       isAtStartOf(node: Node): boolean;
       isAtEndOf(node: Node): boolean;
     }
-  
+
     type Operation =
       | InsertTextOperation
       | RemoveTextOperation
@@ -594,7 +610,7 @@ declare module 'slate' {
       | SplitNodeOperation
       | SetSelectionOperation
       | SetValueOperation;
-  
+
     type InsertTextOperation = {
       type: 'insert_text';
       path: number[];
@@ -602,14 +618,14 @@ declare module 'slate' {
       text: string;
       marks: Mark[];
     };
-  
+
     type RemoveTextOperation = {
       type: 'remove_text';
       path: number[];
       offset: number;
       text: string;
     };
-  
+
     type AddMarkOperation = {
       type: 'add_mark';
       path: number[];
@@ -617,7 +633,7 @@ declare module 'slate' {
       length: number;
       mark: Mark;
     };
-  
+
     type RemoveMarkOperation = {
       type: 'remove_mark';
       path: number[];
@@ -625,7 +641,7 @@ declare module 'slate' {
       length: number;
       mark: Mark;
     };
-  
+
     type SetMarkOperation = {
       type: 'set_mark';
       path: number[];
@@ -634,65 +650,66 @@ declare module 'slate' {
       mark: Mark;
       properties: MarkProperties;
     };
-  
+
     type InsertNodeOperation = {
       type: 'insert_node';
       path: number[];
       node: Node;
     };
-  
+
     type MergeNodeOperation = {
       type: 'merge_node';
       path: number[];
       position: number;
     };
-  
+
     type MoveNodeOperation = {
       type: 'move_node';
       path: number[];
       newPath: number[];
     };
-  
+
     type RemoveNodeOperation = {
       type: 'remove_node';
       path: number[];
       node: Node;
     };
-  
+
     type SetNodeOperation = {
       type: 'set_node';
       path: number[];
       properties: BlockProperties | InlineProperties | TextProperties;
     };
-  
+
     type SplitNodeOperation = {
       type: 'split_node';
       path: number[];
       position: number;
       target: number;
     };
-  
+
     type SetSelectionOperation = {
       type: 'set_selection';
       properties: RangeProperties;
       selection: Range;
     };
-  
+
     type SetValueOperation = {
       type: 'set_value';
       properties: ValueProperties;
       value: Value;
     };
-  
+
     export const Operations: {
       apply: (value: Value, operation: Operation) => Value;
       invert: (operation: Operation) => Operation;
     };
-  
+
     export class Stack extends Immutable.Record({}) {
       plugins: any[];
     }
-  
+
+    export function setKeyGenerator(func: () => string): void;
     export function resetKeyGenerator(): void;
   }
-  
+
