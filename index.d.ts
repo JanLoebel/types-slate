@@ -165,6 +165,7 @@ declare module 'slate' {
       DataMap
     > {
       object: 'document';
+      nodes: Immutable.List<Block>;
 
       static create(
         properties: DocumentProperties | Document | Immutable.List<Node> | Node[]
@@ -195,6 +196,7 @@ declare module 'slate' {
     export class Block extends BaseNode {
       isVoid: boolean;
       object: 'block';
+      nodes: Immutable.List<Block | Text | Inline>;
 
       static create(properties: BlockProperties | Block | string): Block;
       static createList(
@@ -226,6 +228,7 @@ declare module 'slate' {
     export class Inline extends BaseNode {
       isVoid: boolean;
       object: 'inline';
+      nodes: Immutable.List<Inline | Text>;
 
       static create(properties: InlineProperties | Inline | string): Inline;
       static createList(
