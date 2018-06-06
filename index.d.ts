@@ -118,7 +118,7 @@ declare module 'slate' {
       readonly marks: Immutable.Set<Mark>;
       readonly activeMarks: Immutable.Set<Mark>;
       readonly blocks: Immutable.List<Block>;
-      readonly fragement: Document;
+      readonly fragment: Document;
       readonly inlines: Immutable.List<Inline>;
       readonly text: Immutable.List<Text>;
       readonly characters: Immutable.List<Character>;
