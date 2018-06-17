@@ -376,6 +376,9 @@ declare module 'slate' {
       applyOperations(operations: Operation[]): Change;
       applyOperation(operation: Operation): Change;
 
+      // Full Value Change
+      setValue(properties: Value | ValueProperties): Change;
+
       // Current Value Changes
       deleteBackward(n: number): Change;
       deleteForward(n: number): Change;
