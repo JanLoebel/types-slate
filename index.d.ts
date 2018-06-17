@@ -592,7 +592,7 @@ declare module 'slate' {
       hasEndBetween(node: Node, start: number, end: number): boolean;
       hasEdgeBetween(node: Node, start: number, end: number): boolean;
 
-      hasAnchorAtIn(node: Node): boolean;
+      hasAnchorIn(node: Node): boolean;
       hasFocusIn(node: Node): boolean;
       hasStartIn(node: Node): boolean;
       hasEndIn(node: Node): boolean;
