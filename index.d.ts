@@ -371,7 +371,7 @@ declare module 'slate' {
       value: Value;
       operations: Immutable.List<Operation>;
 
-      call(customChange: (change: Change, ...args: any[]) => Change): Change;
+      call(customChange: (change: Change, ...args: any[]) => Change, ...args: any[]): Change;
 
       applyOperations(operations: Operation[]): Change;
       applyOperation(operation: Operation): Change;
