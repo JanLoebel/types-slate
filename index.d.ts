@@ -16,36 +16,37 @@ declare module 'slate' {
       [key: string]: Rules;
     }
 
-    interface KindsAndTypes {
-      kinds?: string[];
+    interface ObjectsAndTypes {
+      objects?: string[];
       types?: string[];
     }
 
     type InvalidReason =
-      | 'child_kind_invalid'
+      | 'child_object_invalid'
       | 'child_required'
       | 'child_type_invalid'
       | 'child_unknown'
-      | 'first_child_kind_invalid'
+      | 'first_child_object_invalid'
       | 'first_child_type_invalid'
-      | 'last_child_kind_invalid'
+      | 'last_child_object_invalid'
       | 'last_child_type_invalid'
       | 'node_data_invalid'
       | 'node_is_void_invalid'
       | 'node_mark_invalid'
       | 'node_text_invalid'
-      | 'parent_kind_invalid'
+      | 'parent_object_invalid'
       | 'parent_type_invalid';
 
     interface Rules {
       data?: {
         [key: string]: (v: any) => boolean;
       };
-      first?: KindsAndTypes;
+      first?: ObjectsAndTypes;
       isVoid?: boolean;
-      last?: KindsAndTypes;
+      last?: ObjectsAndTypes;
+      marks?: { type: string }[];
       nodes?: {
-        kinds?: string[];
+        objects?: string[];
         types?: string[];
         min?: number;
         max?: number;
@@ -55,7 +56,7 @@ declare module 'slate' {
         reason: InvalidReason,
         context: { [key: string]: any }
       ) => void;
-      parent?: KindsAndTypes;
+      parent?: ObjectsAndTypes;
       text?: RegExp;
     }
 
